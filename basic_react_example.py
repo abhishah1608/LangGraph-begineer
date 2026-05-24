@@ -14,7 +14,13 @@ def get_todayDate(timezone : str):
     #print("Timezone received in tool: ", timezone)
     return datetime.now(ZoneInfo(timezone)).strftime("%Y-%m-%d %H:%M:%S")
 
-tools= [get_todayDate]
+@tool
+def search(query: str):
+    """Search for the query using TavilySearchResults tool and return the results."""
+    search_tool = TavilySearchResults(search_depth="basic")
+    return search_tool.run(query)
+
+tools= [get_todayDate, search]
 
 agent = initialize_agent(tools=tools, llm=llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
 agent.invoke({"input": "What is the current date and time in Quebec City?"})
